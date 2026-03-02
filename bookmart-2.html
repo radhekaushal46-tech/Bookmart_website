@@ -1,0 +1,1979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BookMart.com — Books in 30 Minutes, Bettiah</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue-900: #0a1628;
+    --blue-800: #0d2050;
+    --blue-700: #1a3a7a;
+    --blue-600: #1e4db7;
+    --blue-500: #2563eb;
+    --blue-400: #3b82f6;
+    --blue-300: #60a5fa;
+    --blue-100: #dbeafe;
+    --blue-50: #eff6ff;
+    --accent: #f59e0b;
+    --accent-light: #fef3c7;
+    --green: #10b981;
+    --green-light: #d1fae5;
+    --red: #ef4444;
+    --white: #ffffff;
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-400: #94a3b8;
+    --gray-600: #475569;
+    --gray-800: #1e293b;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+    --shadow: 0 4px 20px rgba(37,99,235,0.12);
+    --shadow-lg: 0 20px 60px rgba(37,99,235,0.18);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--white);
+    color: var(--gray-800);
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5 { font-family: 'Syne', sans-serif; }
+
+  /* ===== UTILITY ===== */
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 10px; border-radius: 100px;
+    font-size: 12px; font-weight: 600;
+  }
+  .badge-green { background: var(--green-light); color: #065f46; }
+  .badge-blue { background: var(--blue-100); color: var(--blue-700); }
+  .badge-accent { background: var(--accent-light); color: #92400e; }
+  .badge-pulse { animation: pulse-dot 1.5s infinite; }
+
+  @keyframes pulse-dot {
+    0%,100% { opacity: 1; } 50% { opacity: 0.5; }
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 12px 24px; border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 15px;
+    cursor: pointer; border: none; transition: all 0.2s ease;
+    text-decoration: none; white-space: nowrap;
+  }
+  .btn-primary {
+    background: var(--blue-500); color: white;
+    box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+  }
+  .btn-primary:hover { background: var(--blue-600); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,99,235,0.45); }
+  .btn-outline { background: transparent; color: var(--blue-500); border: 2px solid var(--blue-300); }
+  .btn-outline:hover { background: var(--blue-50); }
+  .btn-accent { background: var(--accent); color: white; box-shadow: 0 4px 14px rgba(245,158,11,0.35); }
+  .btn-accent:hover { background: #d97706; transform: translateY(-1px); }
+  .btn-white { background: white; color: var(--blue-600); box-shadow: var(--shadow); }
+  .btn-white:hover { transform: translateY(-1px); box-shadow: var(--shadow-lg); }
+  .btn-sm { padding: 8px 16px; font-size: 13px; }
+
+  /* ===== MODALS ===== */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(10,22,40,0.6);
+    backdrop-filter: blur(8px); z-index: 1000;
+    display: none; align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: white; border-radius: 24px; padding: 40px;
+    width: 100%; max-width: 420px; position: relative;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.2);
+    animation: slideUp 0.3s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  .modal-close {
+    position: absolute; top: 16px; right: 16px;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--gray-100); border: none; cursor: pointer;
+    font-size: 18px; color: var(--gray-600);
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .modal-close:hover { background: var(--gray-200); }
+  .modal h2 { font-size: 24px; margin-bottom: 6px; color: var(--blue-900); }
+  .modal p { color: var(--gray-600); font-size: 14px; margin-bottom: 24px; }
+
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--gray-600); margin-bottom: 6px; }
+  .form-group input, .form-group select {
+    width: 100%; padding: 12px 16px; border: 2px solid var(--gray-200);
+    border-radius: var(--radius-sm); font-family: 'DM Sans', sans-serif; font-size: 15px;
+    transition: border-color 0.2s; outline: none; color: var(--gray-800);
+  }
+  .form-group input:focus, .form-group select:focus { border-color: var(--blue-400); }
+  .form-group .hint { font-size: 12px; color: var(--gray-400); margin-top: 4px; }
+
+  .otp-inputs { display: flex; gap: 10px; }
+  .otp-inputs input {
+    width: 50px; height: 54px; text-align: center;
+    font-size: 20px; font-weight: 700; padding: 0;
+  }
+
+  .divider { text-align: center; margin: 16px 0; color: var(--gray-400); font-size: 13px; position: relative; }
+  .divider::before, .divider::after {
+    content: ''; position: absolute; top: 50%; width: 40%; height: 1px; background: var(--gray-200);
+  }
+  .divider::before { left: 0; } .divider::after { right: 0; }
+
+  /* ===== NAVBAR ===== */
+  .navbar {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,0.95); backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--gray-100);
+    padding: 0 24px; height: 68px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .navbar-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .navbar-logo {
+    width: 40px; height: 40px; background: var(--blue-500); border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;
+  }
+  .navbar-title { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: var(--blue-900); }
+  .navbar-title span { color: var(--blue-500); }
+
+  .navbar-search {
+    flex: 1; max-width: 400px; margin: 0 24px; position: relative;
+  }
+  .navbar-search input {
+    width: 100%; padding: 10px 16px 10px 40px; border: 2px solid var(--gray-200);
+    border-radius: 100px; font-size: 14px; outline: none;
+    font-family: 'DM Sans', sans-serif; transition: border-color 0.2s;
+    background: var(--gray-50);
+  }
+  .navbar-search input:focus { border-color: var(--blue-400); background: white; }
+  .navbar-search-icon {
+    position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+    color: var(--gray-400); font-size: 16px;
+  }
+  .search-suggestions {
+    position: absolute; top: calc(100% + 8px); left: 0; right: 0;
+    background: white; border-radius: var(--radius-sm); box-shadow: var(--shadow-lg);
+    border: 1px solid var(--gray-100); overflow: hidden; display: none; z-index: 200;
+  }
+  .search-suggestions.show { display: block; }
+  .suggestion-item {
+    padding: 10px 16px; font-size: 14px; cursor: pointer;
+    display: flex; align-items: center; gap: 10px;
+    transition: background 0.15s;
+  }
+  .suggestion-item:hover { background: var(--blue-50); }
+  .suggestion-item span { color: var(--gray-400); font-size: 12px; }
+
+  .navbar-actions { display: flex; align-items: center; gap: 8px; }
+  .nav-icon-btn {
+    width: 40px; height: 40px; border-radius: 10px; border: none;
+    background: var(--gray-50); cursor: pointer; font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; transition: background 0.2s;
+  }
+  .nav-icon-btn:hover { background: var(--blue-50); }
+  .cart-badge {
+    position: absolute; top: -4px; right: -4px;
+    background: var(--red); color: white; font-size: 10px; font-weight: 700;
+    width: 18px; height: 18px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ===== ANNOUNCEMENT BAR ===== */
+  .announcement {
+    background: linear-gradient(90deg, var(--blue-600), var(--blue-800));
+    color: white; text-align: center; padding: 10px;
+    font-size: 13px; font-weight: 500;
+  }
+  .announcement strong { font-weight: 700; }
+  .announcement .ticker {
+    display: inline-flex; align-items: center; gap: 20px;
+  }
+  .announcement .dot { width: 5px; height: 5px; background: var(--accent); border-radius: 50%; display: inline-block; }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: linear-gradient(135deg, var(--blue-900) 0%, var(--blue-700) 60%, var(--blue-600) 100%);
+    min-height: 540px; padding: 60px 24px 80px;
+    position: relative; overflow: hidden;
+    display: flex; align-items: center;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-blob {
+    position: absolute; width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(59,130,246,0.3) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero-blob-1 { top: -100px; right: -100px; }
+  .hero-blob-2 { bottom: -200px; left: -100px; width: 400px; height: 400px; }
+
+  .hero-inner {
+    max-width: 1100px; margin: 0 auto; width: 100%;
+    position: relative; z-index: 1;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+    color: white; padding: 6px 14px; border-radius: 100px;
+    font-size: 13px; font-weight: 600; margin-bottom: 20px;
+  }
+  .hero-badge .live { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; animation: blink 1s infinite; }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  .hero h1 {
+    font-size: clamp(32px, 4vw, 52px); font-weight: 800;
+    color: white; line-height: 1.15; margin-bottom: 16px;
+  }
+  .hero h1 .highlight {
+    background: linear-gradient(135deg, var(--accent), #fbbf24);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero p { color: rgba(255,255,255,0.75); font-size: 17px; line-height: 1.6; margin-bottom: 32px; }
+
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .hero-stats {
+    display: flex; gap: 32px; margin-top: 40px; padding-top: 32px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+  }
+  .hero-stat { color: white; }
+  .hero-stat-num { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; }
+  .hero-stat-label { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+
+  .hero-card {
+    background: rgba(255,255,255,0.1); backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.2); border-radius: 24px;
+    padding: 28px; color: white;
+  }
+  .hero-card-title { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 20px; opacity: 0.8; }
+  .delivery-visual {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+  }
+  .delivery-icon {
+    width: 48px; height: 48px; background: var(--accent); border-radius: 12px;
+    display: flex; align-items: center; justify-content: center; font-size: 24px;
+  }
+  .delivery-text .num { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; }
+  .delivery-text .unit { font-size: 16px; opacity: 0.8; }
+  .delivery-bar {
+    height: 6px; background: rgba(255,255,255,0.15); border-radius: 3px; margin-bottom: 8px; overflow: hidden;
+  }
+  .delivery-bar-fill {
+    height: 100%; background: linear-gradient(90deg, var(--accent), #fbbf24);
+    border-radius: 3px; width: 65%; animation: progress 3s ease-in-out infinite alternate;
+  }
+  @keyframes progress { from { width: 20%; } to { width: 80%; } }
+  .delivery-status { font-size: 13px; opacity: 0.7; }
+
+  .order-mini { margin-top: 20px; }
+  .order-mini-item {
+    display: flex; align-items: center; gap: 12px; padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .order-mini-item:last-child { border-bottom: none; }
+  .order-mini-icon { font-size: 20px; }
+  .order-mini-info { flex: 1; }
+  .order-mini-name { font-size: 13px; font-weight: 600; }
+  .order-mini-price { font-size: 12px; opacity: 0.7; }
+  .order-mini-status { font-size: 11px; background: var(--green-light); color: #065f46; padding: 2px 8px; border-radius: 100px; font-weight: 600; }
+
+  /* ===== PINCODE CHECK ===== */
+  .pincode-section {
+    background: var(--gray-50); padding: 32px 24px; border-bottom: 1px solid var(--gray-200);
+  }
+  .pincode-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  }
+  .pincode-icon { font-size: 32px; }
+  .pincode-text h3 { font-size: 16px; font-weight: 700; color: var(--blue-900); }
+  .pincode-text p { font-size: 13px; color: var(--gray-600); }
+  .pincode-form { display: flex; gap: 10px; flex: 1; max-width: 340px; margin-left: auto; }
+  .pincode-form input {
+    flex: 1; padding: 10px 16px; border: 2px solid var(--gray-200);
+    border-radius: var(--radius-sm); font-size: 14px; outline: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .pincode-form input:focus { border-color: var(--blue-400); }
+  .pincode-result {
+    margin-top: 12px; display: flex; align-items: center; gap: 8px;
+    font-size: 14px; font-weight: 600; display: none;
+  }
+  .pincode-result.available { color: var(--green); display: flex; }
+  .pincode-result.unavailable { color: var(--red); display: flex; }
+
+  /* ===== CATEGORIES ===== */
+  .section { padding: 60px 24px; }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+  .section-header { margin-bottom: 36px; }
+  .section-header h2 { font-size: 28px; font-weight: 800; color: var(--blue-900); margin-bottom: 6px; }
+  .section-header p { color: var(--gray-600); font-size: 16px; }
+  .section-header-row { display: flex; justify-content: space-between; align-items: flex-end; }
+
+  .categories-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px;
+  }
+  .category-card {
+    background: white; border: 2px solid var(--gray-100); border-radius: var(--radius);
+    padding: 24px 16px; text-align: center; cursor: pointer;
+    transition: all 0.2s ease; text-decoration: none; color: inherit;
+  }
+  .category-card:hover, .category-card.active {
+    border-color: var(--blue-400); background: var(--blue-50);
+    transform: translateY(-3px); box-shadow: var(--shadow);
+  }
+  .category-icon { font-size: 36px; margin-bottom: 10px; }
+  .category-name { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: var(--blue-900); }
+  .category-count { font-size: 11px; color: var(--gray-400); margin-top: 3px; }
+
+  /* ===== FILTERS ===== */
+  .filters-bar {
+    display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 28px;
+  }
+  .filter-select {
+    padding: 8px 14px; border: 2px solid var(--gray-200); border-radius: 100px;
+    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+    color: var(--gray-700); background: white; cursor: pointer; outline: none;
+    transition: border-color 0.2s;
+  }
+  .filter-select:focus { border-color: var(--blue-400); }
+  .filter-tag {
+    padding: 6px 14px; border-radius: 100px; font-size: 12px; font-weight: 600;
+    cursor: pointer; border: 2px solid var(--gray-200); background: white;
+    transition: all 0.2s; color: var(--gray-600);
+  }
+  .filter-tag.active { border-color: var(--blue-500); background: var(--blue-500); color: white; }
+
+  /* ===== PRODUCTS GRID ===== */
+  .products-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px;
+  }
+  .product-card {
+    background: white; border: 2px solid var(--gray-100); border-radius: var(--radius);
+    overflow: hidden; transition: all 0.25s ease; cursor: pointer; position: relative;
+  }
+  .product-card:hover { border-color: var(--blue-300); transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+
+  .product-img {
+    height: 180px; background: linear-gradient(135deg, var(--blue-50), var(--blue-100));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 64px; position: relative;
+  }
+  .product-badge-30min {
+    position: absolute; top: 10px; left: 10px;
+    background: var(--green); color: white; font-size: 10px; font-weight: 700;
+    padding: 3px 8px; border-radius: 100px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .product-badge-30min::before { content: '⚡'; }
+  .product-badge-new {
+    position: absolute; top: 10px; right: 10px;
+    background: var(--accent); color: white; font-size: 10px; font-weight: 700;
+    padding: 3px 8px; border-radius: 100px;
+  }
+  .product-wishlist {
+    position: absolute; top: 10px; right: 10px;
+    width: 32px; height: 32px; border-radius: 50%; background: white;
+    border: none; cursor: pointer; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: var(--shadow-sm); transition: transform 0.2s;
+  }
+  .product-wishlist:hover { transform: scale(1.15); }
+
+  .product-info { padding: 16px; }
+  .product-class { font-size: 11px; font-weight: 700; color: var(--blue-500); text-transform: uppercase; letter-spacing: 0.5px; }
+  .product-name { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: var(--blue-900); margin: 4px 0 6px; line-height: 1.3; }
+  .product-meta { font-size: 12px; color: var(--gray-400); margin-bottom: 12px; }
+  .product-footer { display: flex; align-items: center; justify-content: space-between; }
+  .product-price { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; color: var(--blue-900); }
+  .product-price span { font-size: 13px; text-decoration: line-through; color: var(--gray-400); margin-left: 4px; font-family: 'DM Sans', sans-serif; font-weight: 400; }
+  .product-add-btn {
+    width: 36px; height: 36px; border-radius: 10px; background: var(--blue-500);
+    border: none; color: white; font-size: 20px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; font-weight: 700;
+  }
+  .product-add-btn:hover { background: var(--blue-600); transform: scale(1.1); }
+  .product-stock { font-size: 11px; font-weight: 600; margin-bottom: 10px; }
+  .stock-in { color: var(--green); } .stock-low { color: var(--accent); } .stock-out { color: var(--red); }
+
+  /* ===== PRODUCT MODAL ===== */
+  .product-modal { max-width: 600px; padding: 0; overflow: hidden; }
+  .product-modal-img {
+    height: 220px; background: linear-gradient(135deg, var(--blue-50), var(--blue-100));
+    display: flex; align-items: center; justify-content: center; font-size: 80px;
+  }
+  .product-modal-body { padding: 32px; }
+  .product-modal-body h2 { font-size: 22px; color: var(--blue-900); margin-bottom: 4px; }
+  .product-modal-badges { display: flex; gap: 8px; margin: 12px 0; flex-wrap: wrap; }
+  .product-modal-desc { font-size: 14px; color: var(--gray-600); line-height: 1.6; margin-bottom: 20px; }
+  .product-modal-price { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; color: var(--blue-900); margin-bottom: 4px; }
+  .product-modal-mrp { font-size: 14px; color: var(--gray-400); text-decoration: line-through; }
+  .product-modal-saving { font-size: 13px; font-weight: 600; color: var(--green); margin-bottom: 20px; }
+  .qty-selector { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+  .qty-selector label { font-size: 14px; font-weight: 600; color: var(--gray-600); }
+  .qty-controls { display: flex; align-items: center; gap: 0; border: 2px solid var(--gray-200); border-radius: 10px; overflow: hidden; }
+  .qty-btn { width: 36px; height: 36px; border: none; background: white; cursor: pointer; font-size: 18px; font-weight: 700; transition: background 0.2s; }
+  .qty-btn:hover { background: var(--blue-50); }
+  .qty-num { padding: 0 16px; font-weight: 700; font-size: 16px; }
+  .product-modal-actions { display: flex; gap: 12px; }
+  .product-modal-actions .btn { flex: 1; }
+
+  /* ===== CART SIDEBAR ===== */
+  .cart-sidebar {
+    position: fixed; top: 0; right: -420px; width: 400px; height: 100vh;
+    background: white; box-shadow: -20px 0 60px rgba(0,0,0,0.15);
+    z-index: 500; display: flex; flex-direction: column;
+    transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .cart-sidebar.open { right: 0; }
+  .cart-header {
+    padding: 20px 24px; border-bottom: 1px solid var(--gray-100);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .cart-header h3 { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; }
+  .cart-body { flex: 1; overflow-y: auto; padding: 20px 24px; }
+  .cart-item {
+    display: flex; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--gray-100);
+    align-items: flex-start;
+  }
+  .cart-item-icon { width: 56px; height: 56px; background: var(--blue-50); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; }
+  .cart-item-info { flex: 1; }
+  .cart-item-name { font-weight: 600; font-size: 14px; color: var(--blue-900); margin-bottom: 2px; }
+  .cart-item-sub { font-size: 12px; color: var(--gray-400); }
+  .cart-item-price { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; margin-top: 6px; }
+  .cart-item-controls { display: flex; align-items: center; gap: 0; border: 1px solid var(--gray-200); border-radius: 8px; overflow: hidden; margin-top: 8px; display: inline-flex; }
+  .cart-item-btn { width: 28px; height: 28px; border: none; background: white; cursor: pointer; font-size: 15px; transition: background 0.2s; }
+  .cart-item-btn:hover { background: var(--gray-100); }
+  .cart-item-qty { padding: 0 10px; font-size: 13px; font-weight: 700; }
+  .cart-item-remove { background: none; border: none; color: var(--gray-400); cursor: pointer; font-size: 14px; margin-left: 8px; padding: 4px; transition: color 0.2s; }
+  .cart-item-remove:hover { color: var(--red); }
+
+  .cart-empty { text-align: center; padding: 60px 20px; color: var(--gray-400); }
+  .cart-empty div { font-size: 60px; margin-bottom: 16px; }
+  .cart-empty p { font-size: 15px; }
+
+  .coupon-input { display: flex; gap: 8px; padding: 16px 0; border-top: 1px solid var(--gray-100); }
+  .coupon-input input { flex: 1; padding: 10px 14px; border: 2px solid var(--gray-200); border-radius: 8px; font-size: 14px; outline: none; font-family: 'DM Sans', sans-serif; }
+  .coupon-input input:focus { border-color: var(--blue-400); }
+  .coupon-success { font-size: 12px; color: var(--green); font-weight: 600; margin-bottom: 12px; display: none; }
+  .coupon-success.show { display: block; }
+
+  .cart-footer { padding: 20px 24px; border-top: 1px solid var(--gray-100); }
+  .cart-summary-row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 6px; }
+  .cart-summary-row.total { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: var(--blue-900); margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--gray-200); }
+  .cart-delivery-note { font-size: 12px; color: var(--green); font-weight: 600; margin: 8px 0 16px; display: flex; align-items: center; gap: 4px; }
+
+  /* ===== CHECKOUT MODAL ===== */
+  .checkout-modal { max-width: 520px; }
+  .checkout-steps { display: flex; gap: 0; margin-bottom: 28px; }
+  .checkout-step {
+    flex: 1; text-align: center; position: relative;
+    font-size: 12px; font-weight: 600; color: var(--gray-400);
+  }
+  .checkout-step.active { color: var(--blue-500); }
+  .checkout-step.done { color: var(--green); }
+  .checkout-step-dot {
+    width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--gray-200);
+    background: white; display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 6px; font-size: 12px; font-weight: 700; transition: all 0.3s;
+  }
+  .checkout-step.active .checkout-step-dot { border-color: var(--blue-500); background: var(--blue-500); color: white; }
+  .checkout-step.done .checkout-step-dot { border-color: var(--green); background: var(--green); color: white; }
+  .checkout-step::after {
+    content: ''; position: absolute; top: 14px; left: 70%; width: 60%;
+    height: 2px; background: var(--gray-200);
+  }
+  .checkout-step:last-child::after { display: none; }
+  .checkout-step.done::after { background: var(--green); }
+
+  /* ===== TRACKING MODAL ===== */
+  .tracking-modal { max-width: 480px; }
+  .tracking-map {
+    height: 220px; background: linear-gradient(135deg, #e0f2fe, #bfdbfe);
+    border-radius: var(--radius-sm); margin-bottom: 20px;
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .tracking-map-label { font-size: 14px; color: var(--blue-700); font-weight: 600; text-align: center; }
+  .tracking-rider {
+    position: absolute; width: 40px; height: 40px; background: var(--blue-500);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 20px; box-shadow: 0 4px 16px rgba(37,99,235,0.4);
+    animation: riderMove 4s ease-in-out infinite;
+  }
+  @keyframes riderMove {
+    0% { top: 60%; left: 20%; }
+    25% { top: 40%; left: 40%; }
+    50% { top: 30%; left: 60%; }
+    75% { top: 45%; left: 75%; }
+    100% { top: 60%; left: 20%; }
+  }
+  .tracking-pulse {
+    position: absolute; bottom: 20%; right: 20%;
+    width: 20px; height: 20px; background: var(--accent);
+    border-radius: 50%; animation: pulseRing 1.5s infinite;
+  }
+  @keyframes pulseRing {
+    0% { box-shadow: 0 0 0 0 rgba(245,158,11,0.5); }
+    100% { box-shadow: 0 0 0 20px rgba(245,158,11,0); }
+  }
+  .tracking-countdown {
+    font-family: 'Syne', sans-serif; font-size: 48px; font-weight: 800;
+    color: var(--blue-500); text-align: center; margin-bottom: 4px;
+  }
+  .tracking-label { text-align: center; font-size: 14px; color: var(--gray-600); margin-bottom: 20px; }
+  .tracking-steps { display: flex; flex-direction: column; gap: 12px; }
+  .tracking-step { display: flex; align-items: center; gap: 14px; }
+  .tracking-step-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .tracking-step.done .tracking-step-icon { background: var(--green-light); }
+  .tracking-step.current .tracking-step-icon { background: var(--blue-100); animation: pulse-dot 1s infinite; }
+  .tracking-step.pending .tracking-step-icon { background: var(--gray-100); }
+  .tracking-step-info { flex: 1; }
+  .tracking-step-name { font-size: 14px; font-weight: 600; color: var(--blue-900); }
+  .tracking-step-sub { font-size: 12px; color: var(--gray-400); }
+  .tracking-step-time { font-size: 12px; font-weight: 600; color: var(--gray-600); }
+
+  /* ===== DELIVERY PARTNER PANEL ===== */
+  .panel-modal { max-width: 480px; }
+  .partner-order-card {
+    background: var(--gray-50); border-radius: var(--radius-sm);
+    padding: 16px; margin-bottom: 12px; border: 2px solid var(--gray-100);
+    transition: border-color 0.2s;
+  }
+  .partner-order-card.active { border-color: var(--blue-400); background: var(--blue-50); }
+  .partner-order-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .partner-order-id { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; }
+  .partner-order-time { font-size: 12px; color: var(--accent); font-weight: 600; }
+  .partner-order-address { font-size: 13px; color: var(--gray-600); margin-bottom: 10px; display: flex; align-items: flex-start; gap: 6px; }
+  .partner-order-items { font-size: 12px; color: var(--gray-500); margin-bottom: 12px; }
+  .partner-order-actions { display: flex; gap: 8px; }
+
+  /* ===== ADMIN PANEL ===== */
+  .admin-modal { max-width: 600px; }
+  .admin-tabs { display: flex; gap: 2px; background: var(--gray-100); border-radius: 10px; padding: 4px; margin-bottom: 24px; }
+  .admin-tab { flex: 1; padding: 8px 12px; text-align: center; font-size: 13px; font-weight: 600; cursor: pointer; border-radius: 8px; border: none; background: transparent; transition: all 0.2s; color: var(--gray-500); }
+  .admin-tab.active { background: white; color: var(--blue-600); box-shadow: var(--shadow-sm); }
+
+  .admin-stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
+  .admin-stat { background: var(--gray-50); border-radius: var(--radius-sm); padding: 16px; }
+  .admin-stat-num { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 800; color: var(--blue-900); }
+  .admin-stat-label { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+
+  .order-table { width: 100%; border-collapse: collapse; }
+  .order-table th { text-align: left; font-size: 11px; font-weight: 700; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px; border-bottom: 2px solid var(--gray-100); }
+  .order-table td { padding: 12px 12px; font-size: 13px; border-bottom: 1px solid var(--gray-50); }
+  .order-table tr:hover td { background: var(--gray-50); }
+
+  /* ===== FEATURES / WHY ===== */
+  .features-section { background: var(--blue-900); padding: 80px 24px; }
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 32px; margin-top: 40px; }
+  .feature-card { text-align: center; }
+  .feature-icon {
+    width: 64px; height: 64px; border-radius: 16px; margin: 0 auto 16px;
+    display: flex; align-items: center; justify-content: center; font-size: 28px;
+  }
+  .feature-icon-blue { background: rgba(37,99,235,0.3); }
+  .feature-icon-green { background: rgba(16,185,129,0.3); }
+  .feature-icon-accent { background: rgba(245,158,11,0.3); }
+  .feature-icon-purple { background: rgba(139,92,246,0.3); }
+  .feature-card h3 { font-size: 17px; font-weight: 700; color: white; margin-bottom: 8px; }
+  .feature-card p { font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.6; }
+
+  /* ===== TESTIMONIALS ===== */
+  .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+  .testimonial-card {
+    background: white; border: 2px solid var(--gray-100); border-radius: var(--radius);
+    padding: 24px; transition: box-shadow 0.2s;
+  }
+  .testimonial-card:hover { box-shadow: var(--shadow); }
+  .testimonial-stars { color: var(--accent); font-size: 16px; margin-bottom: 12px; }
+  .testimonial-text { font-size: 14px; color: var(--gray-600); line-height: 1.6; margin-bottom: 16px; font-style: italic; }
+  .testimonial-author { display: flex; align-items: center; gap: 12px; }
+  .testimonial-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--blue-100); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  .testimonial-name { font-weight: 700; font-size: 14px; color: var(--blue-900); }
+  .testimonial-role { font-size: 12px; color: var(--gray-400); }
+
+  /* ===== FOOTER ===== */
+  .footer { background: var(--blue-900); color: white; padding: 60px 24px 32px; }
+  .footer-inner { max-width: 1100px; margin: 0 auto; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 48px; }
+  .footer-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .footer-logo-icon { width: 40px; height: 40px; background: var(--blue-500); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  .footer-logo-text { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; }
+  .footer-desc { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.7; margin-bottom: 20px; }
+  .footer-contact-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: rgba(255,255,255,0.65); margin-bottom: 8px; }
+  .footer-col h4 { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; margin-bottom: 16px; color: rgba(255,255,255,0.9); }
+  .footer-col a { display: block; font-size: 13px; color: rgba(255,255,255,0.55); text-decoration: none; margin-bottom: 10px; transition: color 0.2s; }
+  .footer-col a:hover { color: white; }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: gap; gap: 12px; }
+  .footer-bottom-text { font-size: 13px; color: rgba(255,255,255,0.4); }
+  .footer-payment-icons { display: flex; gap: 10px; }
+  .payment-icon { background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.7); }
+
+  /* ===== OVERLAY ===== */
+  .sidebar-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(4px); z-index: 499; display: none;
+  }
+  .sidebar-overlay.active { display: block; }
+
+  /* ===== TOAST ===== */
+  .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+  .toast {
+    background: var(--blue-900); color: white; padding: 14px 20px;
+    border-radius: 12px; font-size: 14px; font-weight: 500;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 10px;
+    animation: toastIn 0.3s ease; max-width: 320px;
+  }
+  .toast.success { background: #065f46; }
+  .toast.error { background: #7f1d1d; }
+  @keyframes toastIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+  @keyframes toastOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+  .toast.removing { animation: toastOut 0.3s ease forwards; }
+
+  /* ===== MOBILE NAV ===== */
+  .mobile-nav {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+    background: white; border-top: 1px solid var(--gray-100);
+    display: none; padding: 8px 0 env(safe-area-inset-bottom);
+  }
+  .mobile-nav-inner { display: flex; }
+  .mobile-nav-item {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    padding: 6px 0; border: none; background: transparent; cursor: pointer;
+    font-size: 20px; color: var(--gray-400); transition: color 0.2s;
+    position: relative;
+  }
+  .mobile-nav-item.active { color: var(--blue-500); }
+  .mobile-nav-label { font-size: 10px; font-weight: 600; margin-top: 2px; font-family: 'DM Sans', sans-serif; }
+  .mobile-nav-cart-badge {
+    position: absolute; top: 4px; right: calc(50% - 14px);
+    background: var(--red); color: white; font-size: 9px; font-weight: 800;
+    width: 16px; height: 16px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 30px; }
+    .hero-card { display: none; }
+    .hero { padding: 40px 20px 60px; min-height: auto; }
+    .hero h1 { font-size: 28px; }
+    .hero-stats { gap: 20px; }
+    .navbar-search { display: none; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
+    .mobile-nav { display: block; }
+    body { padding-bottom: 72px; }
+    .modal { padding: 28px 20px; }
+    .cart-sidebar { width: 100%; right: -100%; }
+    .products-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .categories-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  @media (max-width: 480px) {
+    .footer-grid { grid-template-columns: 1fr; }
+    .admin-stat-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ===== SUPPORT CHAT ===== */
+  .support-btn {
+    position: fixed; bottom: 100px; right: 24px; z-index: 300;
+    width: 52px; height: 52px; border-radius: 50%; background: var(--blue-500);
+    color: white; font-size: 22px; border: none; cursor: pointer;
+    box-shadow: 0 8px 24px rgba(37,99,235,0.4); transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .support-btn:hover { transform: scale(1.1); background: var(--blue-600); }
+  .support-chat {
+    position: fixed; bottom: 165px; right: 24px; z-index: 300; width: 300px;
+    background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    display: none; overflow: hidden;
+  }
+  .support-chat.open { display: block; animation: slideUp 0.3s ease; }
+  .support-chat-header { background: var(--blue-500); color: white; padding: 16px 20px; }
+  .support-chat-header h4 { font-size: 15px; font-weight: 700; }
+  .support-chat-header p { font-size: 12px; opacity: 0.8; }
+  .support-chat-body { padding: 16px; height: 200px; overflow-y: auto; }
+  .support-chat-msg { margin-bottom: 12px; }
+  .support-chat-msg.agent { display: flex; gap: 8px; }
+  .support-chat-msg.user { display: flex; justify-content: flex-end; }
+  .support-chat-bubble {
+    max-width: 200px; padding: 8px 12px; border-radius: 12px;
+    font-size: 13px; line-height: 1.4;
+  }
+  .agent .support-chat-bubble { background: var(--gray-100); color: var(--gray-800); border-bottom-left-radius: 4px; }
+  .user .support-chat-bubble { background: var(--blue-500); color: white; border-bottom-right-radius: 4px; }
+  .support-chat-input { display: flex; border-top: 1px solid var(--gray-100); }
+  .support-chat-input input { flex: 1; padding: 12px 16px; border: none; outline: none; font-size: 13px; font-family: 'DM Sans', sans-serif; }
+  .support-chat-input button { padding: 12px 14px; border: none; background: transparent; cursor: pointer; color: var(--blue-500); font-size: 18px; }
+
+  /* Section backgrounds */
+  .bg-gray { background: var(--gray-50); }
+
+  /* Animations */
+  .fade-in { opacity: 0; transform: translateY(20px); animation: fadeInUp 0.6s ease forwards; }
+  @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+  .delay-1 { animation-delay: 0.1s; }
+  .delay-2 { animation-delay: 0.2s; }
+  .delay-3 { animation-delay: 0.3s; }
+
+  /* Notification Panel */
+  .notif-panel {
+    position: fixed; top: 68px; right: 16px; width: 320px;
+    background: white; border-radius: var(--radius); box-shadow: var(--shadow-lg);
+    border: 1px solid var(--gray-100); z-index: 400; display: none;
+    animation: slideUp 0.25s ease;
+  }
+  .notif-panel.open { display: block; }
+  .notif-header { padding: 16px 20px; border-bottom: 1px solid var(--gray-100); display: flex; justify-content: space-between; align-items: center; }
+  .notif-header h4 { font-size: 15px; font-weight: 700; color: var(--blue-900); }
+  .notif-item { padding: 14px 20px; border-bottom: 1px solid var(--gray-50); display: flex; gap: 12px; cursor: pointer; }
+  .notif-item:hover { background: var(--gray-50); }
+  .notif-icon { font-size: 24px; }
+  .notif-text { font-size: 13px; color: var(--gray-700); line-height: 1.5; }
+  .notif-time { font-size: 11px; color: var(--gray-400); margin-top: 2px; }
+  .notif-dot { width: 8px; height: 8px; background: var(--blue-500); border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<!-- Announcement Bar -->
+<div class="announcement">
+  <div class="ticker">
+    <span>📚 Welcome to BookMart.com</span>
+    <span class="dot"></span>
+    <span>⚡ <strong>30-Minute Delivery</strong> in Bettiah City</span>
+    <span class="dot"></span>
+    <span>🎉 Use code <strong>BOOK10</strong> for 10% off!</span>
+    <span class="dot"></span>
+    <span>📦 Free delivery above ₹199</span>
+  </div>
+</div>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <a href="#" class="navbar-brand">
+    <div class="navbar-logo">📚</div>
+    <div class="navbar-title">Book<span>Mart</span></div>
+  </a>
+
+  <div class="navbar-search">
+    <span class="navbar-search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="Search books, subjects, class..." autocomplete="off">
+    <div class="search-suggestions" id="searchSuggestions">
+      <div class="suggestion-item" onclick="applySearch('NCERT Mathematics Class 10')">📘 NCERT Mathematics Class 10 <span>NCERT Books</span></div>
+      <div class="suggestion-item" onclick="applySearch('Class 12 Physics')">📙 Class 12 Physics <span>Reference Books</span></div>
+      <div class="suggestion-item" onclick="applySearch('All stationery items')">🖊️ All stationery items <span>Stationery</span></div>
+      <div class="suggestion-item" onclick="applySearch('Class 5 Hindi')">📗 Class 5 Hindi <span>School Books</span></div>
+      <div class="suggestion-item" onclick="applySearch('RD Sharma Class 11')">📕 RD Sharma Class 11 <span>Reference Books</span></div>
+    </div>
+  </div>
+
+  <div class="navbar-actions">
+    <button class="nav-icon-btn" onclick="toggleNotif()" title="Notifications">
+      🔔
+      <div class="cart-badge" id="notifBadge">3</div>
+    </button>
+
+    <button class="nav-icon-btn" onclick="openModal('authModal')" id="loginBtn" title="Login">
+      👤
+    </button>
+
+    <button class="nav-icon-btn" onclick="openCart()" title="Cart" style="display:none;" id="adminBtn">
+      ⚙️
+    </button>
+
+    <button class="nav-icon-btn" onclick="openCart()" title="Cart">
+      🛒
+      <div class="cart-badge" id="cartBadge">0</div>
+    </button>
+  </div>
+</nav>
+
+<!-- Notification Panel -->
+<div class="notif-panel" id="notifPanel">
+  <div class="notif-header">
+    <h4>Notifications</h4>
+    <span style="font-size:12px;color:var(--blue-500);cursor:pointer;font-weight:600;">Mark all read</span>
+  </div>
+  <div class="notif-item">
+    <div class="notif-dot"></div>
+    <div class="notif-icon">📦</div>
+    <div><div class="notif-text">Your order #BM2401 is out for delivery!</div><div class="notif-time">2 min ago</div></div>
+  </div>
+  <div class="notif-item">
+    <div class="notif-dot"></div>
+    <div class="notif-icon">🎉</div>
+    <div><div class="notif-text">New NCERT books for 2025-26 session now available</div><div class="notif-time">1 hour ago</div></div>
+  </div>
+  <div class="notif-item">
+    <div class="notif-dot"></div>
+    <div class="notif-icon">💸</div>
+    <div><div class="notif-text">Use code BOOK10 for 10% off your next order!</div><div class="notif-time">Yesterday</div></div>
+  </div>
+</div>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-blob hero-blob-1"></div>
+  <div class="hero-blob hero-blob-2"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge fade-in">
+        <span class="live"></span> Now delivering in Bettiah City
+      </div>
+      <h1 class="fade-in delay-1">School Books <span class="highlight">Delivered</span> in 30 Minutes</h1>
+      <p class="fade-in delay-2">Books, NCERT, stationery — everything your child needs for school, delivered express to your doorstep. No more running to markets!</p>
+      <div class="hero-actions fade-in delay-3">
+        <button class="btn btn-accent" onclick="scrollToProducts()">🛒 Shop Now</button>
+        <button class="btn btn-white" onclick="openModal('trackModal')">📍 Track Order</button>
+      </div>
+      <div class="hero-stats fade-in delay-3">
+        <div class="hero-stat">
+          <div class="hero-stat-num">30 min</div>
+          <div class="hero-stat-label">Avg Delivery</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">5000+</div>
+          <div class="hero-stat-label">Happy Students</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">2000+</div>
+          <div class="hero-stat-label">Books Available</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-card fade-in delay-2">
+      <div class="hero-card-title">⚡ Live Delivery Status</div>
+      <div class="delivery-visual">
+        <div class="delivery-icon">🛵</div>
+        <div class="delivery-text">
+          <div class="num">24</div>
+          <div class="unit">minutes away</div>
+        </div>
+      </div>
+      <div class="delivery-bar"><div class="delivery-bar-fill"></div></div>
+      <div class="delivery-status">🟢 Rider is on the way to your location</div>
+      <div class="order-mini">
+        <div class="order-mini-item">
+          <div class="order-mini-icon">📘</div>
+          <div class="order-mini-info">
+            <div class="order-mini-name">NCERT Maths Class 10</div>
+            <div class="order-mini-price">₹95 · Qty: 1</div>
+          </div>
+          <span class="order-mini-status">Packed</span>
+        </div>
+        <div class="order-mini-item">
+          <div class="order-mini-icon">✏️</div>
+          <div class="order-mini-info">
+            <div class="order-mini-name">Geometry Box Set</div>
+            <div class="order-mini-price">₹75 · Qty: 2</div>
+          </div>
+          <span class="order-mini-status">Packed</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pincode Check -->
+<div class="pincode-section">
+  <div class="pincode-inner">
+    <div class="pincode-icon">📍</div>
+    <div class="pincode-text">
+      <h3>Check Delivery Availability</h3>
+      <p>Enter your pincode to check if we deliver to your area</p>
+    </div>
+    <div class="pincode-form">
+      <input type="text" id="pincodeInput" placeholder="Enter 6-digit pincode" maxlength="6">
+      <button class="btn btn-primary btn-sm" onclick="checkPincode()">Check</button>
+    </div>
+  </div>
+  <div class="pincode-inner" style="padding-top:8px;">
+    <div></div><div></div>
+    <div>
+      <div class="pincode-result" id="pincodeResult"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Categories -->
+<section class="section" id="categories">
+  <div class="section-inner">
+    <div class="section-header">
+      <h2>📚 Shop by Category</h2>
+      <p>Find books for every class and subject</p>
+    </div>
+    <div class="categories-grid">
+      <a class="category-card active" onclick="filterCategory('all')">
+        <div class="category-icon">📚</div>
+        <div class="category-name">All Books</div>
+        <div class="category-count">2000+ items</div>
+      </a>
+      <a class="category-card" onclick="filterCategory('class')">
+        <div class="category-icon">🏫</div>
+        <div class="category-name">School Books</div>
+        <div class="category-count">Class 1–12</div>
+      </a>
+      <a class="category-card" onclick="filterCategory('ncert')">
+        <div class="category-icon">🔵</div>
+        <div class="category-name">NCERT Books</div>
+        <div class="category-count">All Subjects</div>
+      </a>
+      <a class="category-card" onclick="filterCategory('reference')">
+        <div class="category-icon">📕</div>
+        <div class="category-name">Reference</div>
+        <div class="category-count">RD Sharma, HC Verma</div>
+      </a>
+      <a class="category-card" onclick="filterCategory('stationery')">
+        <div class="category-icon">✏️</div>
+        <div class="category-name">Stationery</div>
+        <div class="category-count">Pens, Notebooks, etc.</div>
+      </a>
+      <a class="category-card" onclick="filterCategory('competitive')">
+        <div class="category-icon">🏆</div>
+        <div class="category-name">Competitive</div>
+        <div class="category-count">JEE, NEET, etc.</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Products -->
+<section class="section bg-gray" id="products">
+  <div class="section-inner">
+    <div class="section-header section-header-row">
+      <div>
+        <h2>⚡ Books with 30-Min Delivery</h2>
+        <p>All items available for immediate dispatch</p>
+      </div>
+      <a href="#" style="color:var(--blue-500);font-weight:600;font-size:14px;text-decoration:none;">View All →</a>
+    </div>
+
+    <div class="filters-bar">
+      <select class="filter-select" onchange="applyFilters()">
+        <option value="">All Classes</option>
+        <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+        <option>Class 4</option><option>Class 5</option><option>Class 6</option>
+        <option>Class 7</option><option>Class 8</option><option>Class 9</option>
+        <option>Class 10</option><option>Class 11</option><option>Class 12</option>
+      </select>
+      <select class="filter-select" onchange="applyFilters()">
+        <option value="">All Subjects</option>
+        <option>Mathematics</option><option>Science</option><option>Hindi</option>
+        <option>English</option><option>Social Science</option><option>Physics</option>
+        <option>Chemistry</option><option>Biology</option>
+      </select>
+      <select class="filter-select" onchange="applyFilters()">
+        <option value="">Price Range</option>
+        <option>Under ₹100</option><option>₹100–₹300</option><option>₹300–₹500</option><option>₹500+</option>
+      </select>
+      <div class="filter-tag active" onclick="toggleTag(this)">In Stock</div>
+      <div class="filter-tag" onclick="toggleTag(this)">On Sale</div>
+      <div class="filter-tag" onclick="toggleTag(this)">New Arrivals</div>
+    </div>
+
+    <div class="products-grid" id="productsGrid">
+      <!-- Products generated by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- Why BookMart -->
+<section class="features-section">
+  <div class="section-inner" style="max-width:1100px;margin:0 auto;">
+    <div style="text-align:center;">
+      <h2 style="font-size:32px;font-weight:800;color:white;">Why Choose BookMart?</h2>
+      <p style="color:rgba(255,255,255,0.6);margin-top:8px;font-size:16px;">Built for Bettiah's students and parents</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon feature-icon-green">⚡</div>
+        <h3>30-Min Delivery</h3>
+        <p>Order before 8 PM and receive your books within 30 minutes, right to your doorstep.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon feature-icon-blue">🗺️</div>
+        <h3>Live Tracking</h3>
+        <p>Watch your delivery partner move in real time on the map, just like Blinkit or Swiggy.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon feature-icon-accent">🔒</div>
+        <h3>OTP Secured</h3>
+        <p>Every order is confirmed with OTP verification. Safe, secure, and fraud-proof.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon feature-icon-purple">📱</div>
+        <h3>Easy Payments</h3>
+        <p>Pay via UPI, card, net banking, or cash on delivery. Multiple options for convenience.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-header">
+      <h2>⭐ What Parents & Students Say</h2>
+      <p>Trusted by thousands of families in Bettiah</p>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+        <div class="testimonial-text">"My son's exams were next morning and we needed his NCERT books urgently. BookMart delivered in just 22 minutes! Absolutely amazing service."</div>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">👩</div>
+          <div><div class="testimonial-name">Priya Sharma</div><div class="testimonial-role">Parent, Bettiah</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+        <div class="testimonial-text">"Best app for students! I ordered all my Class 12 books in one go. The live tracking is super cool — I could see the rider coming!"</div>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">👦</div>
+          <div><div class="testimonial-name">Rahul Kumar</div><div class="testimonial-role">Student, Class 12</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+        <div class="testimonial-text">"Very affordable prices and excellent quality. The OTP confirmation made me feel secure about every order. Highly recommend to all parents!"</div>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">👨</div>
+          <div><div class="testimonial-name">Manoj Tiwari</div><div class="testimonial-role">Parent, Bettiah</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">
+          <div class="footer-logo-icon">📚</div>
+          <div class="footer-logo-text">BookMart</div>
+        </div>
+        <p class="footer-desc">Bettiah's fastest book delivery platform. School books, NCERT, stationery — all delivered in 30 minutes.</p>
+        <div class="footer-contact-item">📍 Main Market, Bettiah, Bihar 845438</div>
+        <div class="footer-contact-item">📞 +91 98765 43210</div>
+        <div class="footer-contact-item">✉️ support@bookmart.com</div>
+      </div>
+      <div class="footer-col">
+        <h4>Categories</h4>
+        <a href="#">School Books</a>
+        <a href="#">NCERT Books</a>
+        <a href="#">Reference Books</a>
+        <a href="#">Stationery</a>
+        <a href="#">Competitive Exams</a>
+      </div>
+      <div class="footer-col">
+        <h4>Customer</h4>
+        <a href="#" onclick="openModal('authModal')">My Account</a>
+        <a href="#">Order History</a>
+        <a href="#">Track Order</a>
+        <a href="#">Returns & Refunds</a>
+        <a href="#">Support</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About Us</a>
+        <a href="#">Careers</a>
+        <a href="#">Partner with Us</a>
+        <a href="#" onclick="openModal('adminModal')">Admin Panel</a>
+        <a href="#" onclick="openModal('partnerModal')">Delivery Partner</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-bottom-text">© 2025 BookMart.com — All rights reserved. Made with ❤️ for Bettiah</div>
+      <div class="footer-payment-icons">
+        <div class="payment-icon">UPI</div>
+        <div class="payment-icon">VISA</div>
+        <div class="payment-icon">MC</div>
+        <div class="payment-icon">COD</div>
+        <div class="payment-icon">NetB</div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Mobile Nav -->
+<nav class="mobile-nav">
+  <div class="mobile-nav-inner">
+    <button class="mobile-nav-item active" onclick="scrollToTop()">🏠<span class="mobile-nav-label">Home</span></button>
+    <button class="mobile-nav-item" onclick="scrollToProducts()">📚<span class="mobile-nav-label">Books</span></button>
+    <button class="mobile-nav-item" onclick="openCart()" style="position:relative;">🛒
+      <div class="mobile-nav-cart-badge" id="mobileCartBadge" style="display:none;">0</div>
+      <span class="mobile-nav-label">Cart</span>
+    </button>
+    <button class="mobile-nav-item" onclick="openModal('trackModal')">📍<span class="mobile-nav-label">Track</span></button>
+    <button class="mobile-nav-item" onclick="openModal('authModal')">👤<span class="mobile-nav-label">Account</span></button>
+  </div>
+</nav>
+
+<!-- Support Chat -->
+<button class="support-btn" onclick="toggleChat()" title="Customer Support">💬</button>
+<div class="support-chat" id="supportChat">
+  <div class="support-chat-header">
+    <h4>💬 BookMart Support</h4>
+    <p>🟢 We're online · Typically replies in seconds</p>
+  </div>
+  <div class="support-chat-body" id="chatBody">
+    <div class="support-chat-msg agent">
+      <div class="support-chat-bubble">Hi! 👋 Welcome to BookMart Support. How can I help you today?</div>
+    </div>
+    <div class="support-chat-msg agent">
+      <div class="support-chat-bubble">You can ask about: orders, delivery, books availability, or payments.</div>
+    </div>
+  </div>
+  <div class="support-chat-input">
+    <input type="text" id="chatInput" placeholder="Type a message..." onkeypress="chatKeyPress(event)">
+    <button onclick="sendChat()">➤</button>
+  </div>
+</div>
+
+<!-- Cart Sidebar -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeCart()"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <h3>🛒 Your Cart</h3>
+    <button class="modal-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-body" id="cartBody">
+    <div class="cart-empty" id="cartEmpty">
+      <div>🛒</div>
+      <p>Your cart is empty.<br>Add some books to get started!</p>
+    </div>
+  </div>
+  <div class="cart-footer">
+    <div id="couponSection" style="display:none;">
+      <div class="coupon-input">
+        <input type="text" id="couponInput" placeholder="Apply coupon code">
+        <button class="btn btn-outline btn-sm" onclick="applyCoupon()">Apply</button>
+      </div>
+      <div class="coupon-success" id="couponSuccess">✅ BOOK10 applied! You saved ₹<span id="couponSaving">0</span></div>
+    </div>
+    <div id="cartSummary" style="display:none;">
+      <div class="cart-summary-row"><span>Subtotal</span><span id="subtotalAmt">₹0</span></div>
+      <div class="cart-summary-row"><span>Delivery Fee</span><span style="color:var(--green);">FREE</span></div>
+      <div class="cart-summary-row"><span>Discount</span><span id="discountAmt" style="color:var(--green);">-₹0</span></div>
+      <div class="cart-summary-row total"><span>Total</span><span id="totalAmt">₹0</span></div>
+      <div class="cart-delivery-note">⚡ Estimated delivery in 30 minutes!</div>
+      <button class="btn btn-primary" style="width:100%;" onclick="startCheckout()">Proceed to Checkout →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== MODALS ====== -->
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal" id="authModalContent">
+    <button class="modal-close" onclick="closeModal('authModal')">✕</button>
+    <div id="loginView">
+      <div style="font-size:40px;margin-bottom:12px;">📚</div>
+      <h2>Login to BookMart</h2>
+      <p>Enter your mobile number to continue</p>
+      <div class="form-group">
+        <label>Mobile Number</label>
+        <input type="tel" id="loginMobile" placeholder="+91 XXXXX XXXXX" maxlength="13">
+        <div class="hint">📱 We'll send an OTP for verification</div>
+      </div>
+      <button class="btn btn-primary" style="width:100%;margin-bottom:12px;" onclick="sendOTP('login')">Send OTP →</button>
+      <div class="divider">or</div>
+      <button class="btn btn-outline" style="width:100%;" onclick="showSignup()">Create New Account</button>
+    </div>
+
+    <div id="otpView" style="display:none;">
+      <div style="font-size:40px;margin-bottom:12px;">📱</div>
+      <h2>Enter OTP</h2>
+      <p id="otpDesc">OTP sent to your mobile number. Valid for 2 minutes.</p>
+      <div class="form-group">
+        <label>Enter 6-digit OTP</label>
+        <div class="otp-inputs">
+          <input type="text" maxlength="1" class="otp-digit" onkeyup="otpNext(this,0)">
+          <input type="text" maxlength="1" class="otp-digit" onkeyup="otpNext(this,1)">
+          <input type="text" maxlength="1" class="otp-digit" onkeyup="otpNext(this,2)">
+          <input type="text" maxlength="1" class="otp-digit" onkeyup="otpNext(this,3)">
+          <input type="text" maxlength="1" class="otp-digit" onkeyup="otpNext(this,4)">
+          <input type="text" maxlength="1" class="otp-digit" onkeyup="otpNext(this,5)">
+        </div>
+        <div class="hint" id="otpTimer">⏱️ Resend in 30s</div>
+      </div>
+      <button class="btn btn-primary" style="width:100%;" onclick="verifyOTP()">Verify OTP ✓</button>
+      <p style="text-align:center;margin-top:12px;font-size:13px;color:var(--gray-500);">
+        <a href="#" onclick="showLogin()" style="color:var(--blue-500);">← Change mobile number</a>
+      </p>
+    </div>
+
+    <div id="signupView" style="display:none;">
+      <div style="font-size:40px;margin-bottom:12px;">✍️</div>
+      <h2>Create Account</h2>
+      <p>Join BookMart — free & instant!</p>
+      <div class="form-group"><label>Full Name</label><input type="text" placeholder="Your full name"></div>
+      <div class="form-group"><label>Mobile Number</label><input type="tel" id="signupMobile" placeholder="+91 XXXXX XXXXX"></div>
+      <div class="form-group"><label>Class (Student/Parent)</label>
+        <select><option>I'm a Parent</option><option>Class 1</option><option>Class 5</option><option>Class 10</option><option>Class 12</option></select>
+      </div>
+      <button class="btn btn-primary" style="width:100%;margin-bottom:12px;" onclick="sendOTP('signup')">Create Account →</button>
+      <p style="text-align:center;font-size:13px;color:var(--gray-500);">Already have an account? <a href="#" onclick="showLogin()" style="color:var(--blue-500);">Login</a></p>
+    </div>
+
+    <div id="profileView" style="display:none;">
+      <div style="font-size:50px;text-align:center;margin-bottom:16px;">👤</div>
+      <h2 style="text-align:center;">My Account</h2>
+      <div style="background:var(--blue-50);border-radius:var(--radius-sm);padding:16px;margin:16px 0;">
+        <div style="font-weight:700;color:var(--blue-900);">Rahul Kumar</div>
+        <div style="font-size:13px;color:var(--gray-600);">📱 +91 98765 43210</div>
+        <div style="font-size:13px;color:var(--gray-600);">📍 Main Market, Bettiah</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <button class="btn btn-outline" style="width:100%;justify-content:flex-start;" onclick="openModal('trackModal');closeModal('authModal');">📦 My Orders</button>
+        <button class="btn btn-outline" style="width:100%;justify-content:flex-start;">📋 Order History</button>
+        <button class="btn btn-outline" style="width:100%;justify-content:flex-start;">📄 Download Invoices</button>
+        <button class="btn btn-outline" style="width:100%;justify-content:flex-start;">⚙️ Settings</button>
+        <button class="btn" style="width:100%;background:var(--gray-100);color:var(--gray-700);" onclick="logout()">🚪 Logout</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT DETAIL MODAL -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal product-modal">
+    <button class="modal-close" onclick="closeModal('productModal')" style="top:10px;right:10px;z-index:10;">✕</button>
+    <div class="product-modal-img" id="pDetailImg">📘</div>
+    <div class="product-modal-body">
+      <div style="font-size:12px;font-weight:700;color:var(--blue-500);text-transform:uppercase;" id="pDetailClass">Class 10 · Mathematics</div>
+      <h2 id="pDetailName">NCERT Mathematics Class 10</h2>
+      <div class="product-modal-badges">
+        <span class="badge badge-green">⚡ 30-Min Delivery</span>
+        <span class="badge badge-blue" id="pDetailStock">✅ In Stock</span>
+        <span class="badge badge-accent">📚 NCERT</span>
+      </div>
+      <p class="product-modal-desc" id="pDetailDesc">Standard NCERT textbook for Class 10 Mathematics. Covers all chapters as per CBSE curriculum including Real Numbers, Polynomials, Linear Equations, Triangles, and more.</p>
+      <div class="product-modal-price" id="pDetailPrice">₹95</div>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px;">
+        <div class="product-modal-mrp" id="pDetailMrp">MRP: ₹120</div>
+        <div class="product-modal-saving" id="pDetailSaving">You save ₹25 (21% off)</div>
+      </div>
+      <div class="qty-selector">
+        <label>Qty:</label>
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="changeQty(-1)">−</button>
+          <span class="qty-num" id="qtyNum">1</span>
+          <button class="qty-btn" onclick="changeQty(1)">+</button>
+        </div>
+      </div>
+      <div class="product-modal-actions">
+        <button class="btn btn-outline" onclick="addToWishlist()">♡ Wishlist</button>
+        <button class="btn btn-primary" onclick="addToCartFromModal()">🛒 Add to Cart</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="modal-overlay" id="checkoutModal">
+  <div class="modal checkout-modal">
+    <button class="modal-close" onclick="closeModal('checkoutModal')">✕</button>
+    <h2 style="margin-bottom:20px;">Checkout</h2>
+    <div class="checkout-steps">
+      <div class="checkout-step done" id="cStep1"><div class="checkout-step-dot">✓</div>Cart</div>
+      <div class="checkout-step active" id="cStep2"><div class="checkout-step-dot">2</div>Address</div>
+      <div class="checkout-step" id="cStep3"><div class="checkout-step-dot">3</div>Payment</div>
+      <div class="checkout-step" id="cStep4"><div class="checkout-step-dot">4</div>Confirm</div>
+    </div>
+
+    <div id="checkoutAddress">
+      <div class="form-group"><label>Full Name</label><input type="text" placeholder="Recipient's name" value="Rahul Kumar"></div>
+      <div class="form-group"><label>Delivery Address</label><input type="text" placeholder="House no, Street, Area" value="12, Gandhi Road, Bettiah"></div>
+      <div class="form-group"><label>Pincode</label><input type="text" placeholder="6-digit pincode" value="845438"></div>
+      <div class="form-group"><label>Mobile Number</label><input type="tel" placeholder="+91 XXXXX XXXXX" value="+91 98765 43210"></div>
+      <div style="background:var(--green-light);padding:12px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;color:#065f46;margin-bottom:20px;">
+        ⚡ Delivery available in your area — Est. 30 minutes!
+      </div>
+      <button class="btn btn-primary" style="width:100%;" onclick="checkoutStep(2)">Continue to Payment →</button>
+    </div>
+
+    <div id="checkoutPayment" style="display:none;">
+      <p style="font-size:14px;color:var(--gray-600);margin-bottom:16px;">Select payment method:</p>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+        <label style="display:flex;align-items:center;gap:12px;padding:14px 16px;border:2px solid var(--blue-400);border-radius:var(--radius-sm);cursor:pointer;background:var(--blue-50);">
+          <input type="radio" name="payment" value="upi" checked> <span>📱</span> <span><b>UPI</b> — Google Pay, PhonePe, Paytm</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:12px;padding:14px 16px;border:2px solid var(--gray-200);border-radius:var(--radius-sm);cursor:pointer;">
+          <input type="radio" name="payment" value="card"> <span>💳</span> <span><b>Debit / Credit Card</b></span>
+        </label>
+        <label style="display:flex;align-items:center;gap:12px;padding:14px 16px;border:2px solid var(--gray-200);border-radius:var(--radius-sm);cursor:pointer;">
+          <input type="radio" name="payment" value="netbanking"> <span>🏦</span> <span><b>Net Banking</b></span>
+        </label>
+        <label style="display:flex;align-items:center;gap:12px;padding:14px 16px;border:2px solid var(--gray-200);border-radius:var(--radius-sm);cursor:pointer;">
+          <input type="radio" name="payment" value="cod"> <span>💵</span> <span><b>Cash on Delivery</b></span>
+        </label>
+      </div>
+      <div style="background:var(--gray-50);padding:16px;border-radius:var(--radius-sm);margin-bottom:20px;">
+        <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;"><span>Subtotal</span><span id="coSubtotal">₹0</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;"><span>Delivery</span><span style="color:var(--green);">FREE</span></div>
+        <div style="display:flex;justify-content:space-between;font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--blue-900);margin-top:10px;padding-top:10px;border-top:1px solid var(--gray-200);"><span>Total</span><span id="coTotal">₹0</span></div>
+      </div>
+      <button class="btn btn-primary" style="width:100%;" onclick="checkoutStep(3)">Send OTP for Confirmation →</button>
+    </div>
+
+    <div id="checkoutOTP" style="display:none;">
+      <div style="text-align:center;padding:20px 0;">
+        <div style="font-size:48px;margin-bottom:12px;">📱</div>
+        <h3 style="font-size:20px;color:var(--blue-900);margin-bottom:8px;">Confirm Your Order</h3>
+        <p style="font-size:14px;color:var(--gray-600);">An OTP has been sent to +91 98765 43210. Enter it below to confirm your order.</p>
+      </div>
+      <div class="form-group" style="margin:20px 0;">
+        <label>Enter OTP</label>
+        <div class="otp-inputs">
+          <input type="text" maxlength="1" class="otp-digit order-otp"><input type="text" maxlength="1" class="otp-digit order-otp"><input type="text" maxlength="1" class="otp-digit order-otp"><input type="text" maxlength="1" class="otp-digit order-otp"><input type="text" maxlength="1" class="otp-digit order-otp"><input type="text" maxlength="1" class="otp-digit order-otp">
+        </div>
+      </div>
+      <button class="btn btn-primary" style="width:100%;" onclick="confirmOrder()">✅ Confirm & Place Order</button>
+    </div>
+
+    <div id="checkoutSuccess" style="display:none;text-align:center;">
+      <div style="font-size:64px;margin:20px 0;">🎉</div>
+      <h2 style="color:var(--green);">Order Confirmed!</h2>
+      <p style="font-size:14px;color:var(--gray-600);margin:12px 0;">Your order <b>#BM2401</b> has been placed successfully!</p>
+      <div style="background:var(--green-light);padding:16px;border-radius:var(--radius-sm);margin:16px 0;">
+        <div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:#065f46;">30 min</div>
+        <div style="font-size:13px;color:#065f46;font-weight:600;">Estimated Delivery Time</div>
+      </div>
+      <button class="btn btn-primary" style="width:100%;margin-bottom:10px;" onclick="closeModal('checkoutModal');openModal('trackModal');">📍 Track Live Order</button>
+      <button class="btn btn-outline" style="width:100%;" onclick="closeModal('checkoutModal');">Continue Shopping</button>
+    </div>
+  </div>
+</div>
+
+<!-- TRACK ORDER MODAL -->
+<div class="modal-overlay" id="trackModal">
+  <div class="modal tracking-modal">
+    <button class="modal-close" onclick="closeModal('trackModal')">✕</button>
+    <h2 style="margin-bottom:4px;">📍 Live Order Tracking</h2>
+    <p style="font-size:13px;color:var(--gray-400);margin-bottom:16px;">Order #BM2401 · Placed 6 min ago</p>
+    <div class="tracking-map">
+      <div class="tracking-rider">🛵</div>
+      <div class="tracking-pulse"></div>
+      <div style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.9);padding:4px 12px;border-radius:100px;font-size:12px;font-weight:600;color:var(--blue-700);">
+        🗺️ Live Map — Bettiah
+      </div>
+    </div>
+    <div class="tracking-countdown" id="trackTimer">24:00</div>
+    <div class="tracking-label">minutes until delivery</div>
+    <div class="tracking-steps">
+      <div class="tracking-step done">
+        <div class="tracking-step-icon">✅</div>
+        <div class="tracking-step-info"><div class="tracking-step-name">Order Confirmed</div><div class="tracking-step-sub">OTP verified successfully</div></div>
+        <div class="tracking-step-time">12:05 PM</div>
+      </div>
+      <div class="tracking-step done">
+        <div class="tracking-step-icon">📦</div>
+        <div class="tracking-step-info"><div class="tracking-step-name">Order Packed</div><div class="tracking-step-sub">Books packed & ready</div></div>
+        <div class="tracking-step-time">12:08 PM</div>
+      </div>
+      <div class="tracking-step current">
+        <div class="tracking-step-icon">🛵</div>
+        <div class="tracking-step-info"><div class="tracking-step-name">Out for Delivery</div><div class="tracking-step-sub">Raju is on the way!</div></div>
+        <div class="tracking-step-time">12:12 PM</div>
+      </div>
+      <div class="tracking-step pending">
+        <div class="tracking-step-icon">🏠</div>
+        <div class="tracking-step-info"><div class="tracking-step-name">Delivered</div><div class="tracking-step-sub">Est. 12:35 PM</div></div>
+        <div class="tracking-step-time">—</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL MODAL -->
+<div class="modal-overlay" id="adminModal">
+  <div class="modal admin-modal">
+    <button class="modal-close" onclick="closeModal('adminModal')">✕</button>
+    <h2 style="margin-bottom:4px;">⚙️ Admin Panel</h2>
+    <p>BookMart.com — Dashboard</p>
+    <div class="admin-tabs">
+      <button class="admin-tab active" onclick="adminTab(this,'adminOverview')">📊 Overview</button>
+      <button class="admin-tab" onclick="adminTab(this,'adminOrders')">📦 Orders</button>
+      <button class="admin-tab" onclick="adminTab(this,'adminProducts')">📚 Products</button>
+    </div>
+
+    <div id="adminOverview">
+      <div class="admin-stat-grid">
+        <div class="admin-stat"><div class="admin-stat-num">47</div><div class="admin-stat-label">📦 Orders Today</div></div>
+        <div class="admin-stat"><div class="admin-stat-num">₹18,430</div><div class="admin-stat-label">💰 Revenue Today</div></div>
+        <div class="admin-stat"><div class="admin-stat-num">3</div><div class="admin-stat-label">🛵 Active Riders</div></div>
+        <div class="admin-stat"><div class="admin-stat-num">2,156</div><div class="admin-stat-label">📚 Products</div></div>
+      </div>
+      <div style="background:var(--gray-50);padding:16px;border-radius:var(--radius-sm);">
+        <div style="font-weight:700;font-size:14px;color:var(--blue-900);margin-bottom:12px;">🔴 Live Orders</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;justify-content:space-between;font-size:13px;"><span>#BM2401 · Rahul Kumar</span><span class="badge badge-blue">Out for Delivery</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;"><span>#BM2402 · Priya Sharma</span><span class="badge badge-accent">Packing</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;"><span>#BM2400 · Manoj Tiwari</span><span class="badge badge-green">Delivered</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="adminOrders" style="display:none;">
+      <div style="overflow-x:auto;">
+        <table class="order-table">
+          <thead><tr><th>Order ID</th><th>Customer</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td>#BM2401</td><td>Rahul Kumar</td><td>₹390</td><td><span class="badge badge-blue">Delivering</span></td><td><button class="btn btn-sm btn-outline" onclick="showToast('Rider assigned!')">Assign</button></td></tr>
+            <tr><td>#BM2402</td><td>Priya Sharma</td><td>₹215</td><td><span class="badge badge-accent">Packing</span></td><td><button class="btn btn-sm btn-outline" onclick="showToast('Rider assigned!')">Assign</button></td></tr>
+            <tr><td>#BM2400</td><td>Manoj Tiwari</td><td>₹560</td><td><span class="badge badge-green">Delivered</span></td><td>—</td></tr>
+            <tr><td>#BM2399</td><td>Sunita Devi</td><td>₹180</td><td><span class="badge badge-green">Delivered</span></td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="adminProducts" style="display:none;">
+      <div style="display:flex;gap:10px;margin-bottom:16px;">
+        <input type="text" placeholder="Search products..." style="flex:1;padding:10px 14px;border:2px solid var(--gray-200);border-radius:var(--radius-sm);font-size:14px;outline:none;font-family:'DM Sans',sans-serif;">
+        <button class="btn btn-primary btn-sm" onclick="showToast('Add product form coming soon!')">+ Add Product</button>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="order-table">
+          <thead><tr><th>Book</th><th>Class</th><th>Price</th><th>Stock</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td>NCERT Maths 10</td><td>10</td><td>₹95</td><td>54</td><td><button class="btn btn-sm btn-outline" onclick="showToast('Edit mode!')">Edit</button></td></tr>
+            <tr><td>Physics HC Verma 1</td><td>11</td><td>₹340</td><td>12</td><td><button class="btn btn-sm btn-outline" onclick="showToast('Edit mode!')">Edit</button></td></tr>
+            <tr><td>NCERT Hindi 8</td><td>8</td><td>₹72</td><td>38</td><td><button class="btn btn-sm btn-outline" onclick="showToast('Edit mode!')">Edit</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DELIVERY PARTNER PANEL -->
+<div class="modal-overlay" id="partnerModal">
+  <div class="modal panel-modal">
+    <button class="modal-close" onclick="closeModal('partnerModal')">✕</button>
+    <h2 style="margin-bottom:4px;">🛵 Delivery Partner Panel</h2>
+    <p>Welcome, Raju! · 4.9 ⭐ · 238 deliveries</p>
+    <div style="display:flex;gap:10px;margin:16px 0;">
+      <div style="flex:1;background:var(--blue-50);border-radius:var(--radius-sm);padding:14px;text-align:center;">
+        <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--blue-700);">3</div>
+        <div style="font-size:12px;color:var(--blue-600);">Today's Orders</div>
+      </div>
+      <div style="flex:1;background:var(--green-light);border-radius:var(--radius-sm);padding:14px;text-align:center;">
+        <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#065f46;">₹180</div>
+        <div style="font-size:12px;color:#065f46;">Today's Earnings</div>
+      </div>
+      <div style="flex:1;background:var(--accent-light);border-radius:var(--radius-sm);padding:14px;text-align:center;">
+        <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#92400e;">22 min</div>
+        <div style="font-size:12px;color:#92400e;">Avg Time</div>
+      </div>
+    </div>
+    <div style="font-weight:700;font-size:14px;color:var(--blue-900);margin-bottom:12px;">📋 Assigned Orders</div>
+
+    <div class="partner-order-card active">
+      <div class="partner-order-header">
+        <div class="partner-order-id">Order #BM2401</div>
+        <div class="partner-order-time">⏱️ 24 min left</div>
+      </div>
+      <div class="partner-order-address">📍 12, Gandhi Road, Bettiah (1.2 km away)</div>
+      <div class="partner-order-items">📦 NCERT Maths 10, Geometry Box · Total ₹390</div>
+      <div class="partner-order-actions">
+        <button class="btn btn-outline btn-sm" onclick="showToast('Opening Google Maps...')">🗺️ Navigate</button>
+        <button class="btn btn-primary btn-sm" onclick="showToast('✅ Order marked as delivered!')">✅ Mark Delivered</button>
+      </div>
+    </div>
+
+    <div class="partner-order-card">
+      <div class="partner-order-header">
+        <div class="partner-order-id">Order #BM2402</div>
+        <div class="partner-order-time">⏱️ Pending</div>
+      </div>
+      <div class="partner-order-address">📍 Station Road, Bettiah (2.1 km away)</div>
+      <div class="partner-order-items">📦 NCERT Science 7, Stationery Kit · Total ₹215</div>
+      <div class="partner-order-actions">
+        <button class="btn btn-outline btn-sm" onclick="showToast('Opening Google Maps...')">🗺️ Navigate</button>
+        <button class="btn btn-primary btn-sm" onclick="showToast('✅ Order marked as delivered!')">✅ Mark Delivered</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ===== PRODUCT DATA =====
+const products = [
+  { id:1, name:'NCERT Mathematics', class:'Class 10', subject:'Mathematics', type:'ncert', price:95, mrp:120, icon:'📘', stock:'in', badge:'New' },
+  { id:2, name:'NCERT Science', class:'Class 9', subject:'Science', type:'ncert', price:85, mrp:105, icon:'📗', stock:'in', badge:'' },
+  { id:3, name:'HC Verma Physics Vol 1', class:'Class 11', subject:'Physics', type:'reference', price:340, mrp:420, icon:'📕', stock:'low', badge:'' },
+  { id:4, name:'RD Sharma Maths', class:'Class 11', subject:'Mathematics', type:'reference', price:285, mrp:350, icon:'📙', stock:'in', badge:'' },
+  { id:5, name:'NCERT History', class:'Class 8', subject:'Social Science', type:'ncert', price:75, mrp:90, icon:'📔', stock:'in', badge:'' },
+  { id:6, name:'Geometry Box Premium', class:'All', subject:'Stationery', type:'stationery', price:75, mrp:120, icon:'📐', stock:'in', badge:'Hot' },
+  { id:7, name:'Classmate Notebook A4 (200 pg)', class:'All', subject:'Stationery', type:'stationery', price:55, mrp:70, icon:'📓', stock:'in', badge:'' },
+  { id:8, name:'Pen Set (10 pcs) Blue', class:'All', subject:'Stationery', type:'stationery', price:45, mrp:60, icon:'🖊️', stock:'in', badge:'Hot' },
+  { id:9, name:'NCERT English Class 12', class:'Class 12', subject:'English', type:'ncert', price:92, mrp:110, icon:'📒', stock:'in', badge:'' },
+  { id:10, name:'Lakhmir Singh Chemistry', class:'Class 10', subject:'Chemistry', type:'reference', price:225, mrp:280, icon:'⚗️', stock:'low', badge:'' },
+  { id:11, name:'NCERT Hindi (Sparsh)', class:'Class 10', subject:'Hindi', type:'ncert', price:78, mrp:95, icon:'📜', stock:'in', badge:'' },
+  { id:12, name:'Scissors & Glue Kit', class:'All', subject:'Stationery', type:'stationery', price:35, mrp:50, icon:'✂️', stock:'in', badge:'' },
+];
+
+let cart = [];
+let currentProduct = null;
+let currentQty = 1;
+let loggedIn = false;
+let couponApplied = false;
+let otpTimerInterval = null;
+
+// ===== RENDER PRODUCTS =====
+function renderProducts(items) {
+  const grid = document.getElementById('productsGrid');
+  if (!items.length) { grid.innerHTML = '<p style="color:var(--gray-400);grid-column:1/-1;text-align:center;padding:40px;">No products found.</p>'; return; }
+  grid.innerHTML = items.map(p => `
+    <div class="product-card" onclick="openProduct(${p.id})">
+      <div class="product-img">
+        <div class="product-badge-30min">30 min</div>
+        ${p.badge ? `<div class="product-badge-new">${p.badge}</div>` : `<button class="product-wishlist" onclick="event.stopPropagation();addToWishlist()">♡</button>`}
+        <span style="font-size:56px;">${p.icon}</span>
+      </div>
+      <div class="product-info">
+        <div class="product-class">${p.class} · ${p.subject}</div>
+        <div class="product-name">${p.name}</div>
+        <div class="product-stock ${p.stock==='in'?'stock-in':p.stock==='low'?'stock-low':'stock-out'}">
+          ${p.stock==='in'?'✅ In Stock':p.stock==='low'?'⚠️ Low Stock':'❌ Out of Stock'}
+        </div>
+        <div class="product-footer">
+          <div class="product-price">₹${p.price} <span>₹${p.mrp}</span></div>
+          <button class="product-add-btn" onclick="event.stopPropagation();addToCart(${p.id})">+</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+renderProducts(products);
+
+// ===== SEARCH =====
+document.getElementById('searchInput').addEventListener('input', function() {
+  const val = this.value.trim();
+  const sugg = document.getElementById('searchSuggestions');
+  sugg.classList.toggle('show', val.length > 0);
+  if (val.length > 1) {
+    const filtered = products.filter(p => p.name.toLowerCase().includes(val.toLowerCase()) || p.subject.toLowerCase().includes(val.toLowerCase()) || p.class.toLowerCase().includes(val.toLowerCase()));
+    renderProducts(filtered);
+  } else {
+    renderProducts(products);
+  }
+});
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.navbar-search')) {
+    document.getElementById('searchSuggestions').classList.remove('show');
+  }
+});
+
+function applySearch(q) {
+  document.getElementById('searchInput').value = q;
+  document.getElementById('searchSuggestions').classList.remove('show');
+  const filtered = products.filter(p => p.name.toLowerCase().includes(q.toLowerCase().split(' ')[0]));
+  renderProducts(filtered.length ? filtered : products);
+  scrollToProducts();
+}
+
+// ===== FILTERS =====
+function filterCategory(cat) {
+  document.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  const filtered = cat === 'all' ? products : products.filter(p => p.type === cat);
+  renderProducts(filtered);
+  scrollToProducts();
+}
+
+function applyFilters() { renderProducts(products); }
+
+function toggleTag(el) {
+  document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ===== PRODUCT MODAL =====
+function openProduct(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  currentProduct = p; currentQty = 1;
+  document.getElementById('pDetailImg').textContent = p.icon;
+  document.getElementById('pDetailClass').textContent = `${p.class} · ${p.subject}`;
+  document.getElementById('pDetailName').textContent = p.name;
+  document.getElementById('pDetailPrice').textContent = `₹${p.price}`;
+  document.getElementById('pDetailMrp').textContent = `MRP: ₹${p.mrp}`;
+  const saving = p.mrp - p.price;
+  const pct = Math.round(saving/p.mrp*100);
+  document.getElementById('pDetailSaving').textContent = `You save ₹${saving} (${pct}% off)`;
+  document.getElementById('pDetailStock').textContent = p.stock==='in'?'✅ In Stock':p.stock==='low'?'⚠️ Low Stock':'❌ Out of Stock';
+  document.getElementById('qtyNum').textContent = 1;
+  openModal('productModal');
+}
+
+function changeQty(delta) {
+  currentQty = Math.max(1, Math.min(10, currentQty + delta));
+  document.getElementById('qtyNum').textContent = currentQty;
+}
+
+function addToCartFromModal() {
+  if (currentProduct) { addToCart(currentProduct.id, currentQty); closeModal('productModal'); }
+}
+
+function addToWishlist() { showToast('♡ Added to wishlist!'); }
+
+// ===== CART =====
+function addToCart(id, qty=1) {
+  const p = products.find(x => x.id === id);
+  if (!p || p.stock === 'out') { showToast('❌ Item out of stock', 'error'); return; }
+  const existing = cart.find(c => c.id === id);
+  if (existing) existing.qty += qty;
+  else cart.push({ ...p, qty });
+  updateCartUI();
+  showToast(`📚 ${p.name} added to cart!`, 'success');
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(c => c.id !== id);
+  updateCartUI();
+}
+
+function changeCartQty(id, delta) {
+  const item = cart.find(c => c.id === id);
+  if (!item) return;
+  item.qty = Math.max(1, item.qty + delta);
+  if (item.qty === 0) removeFromCart(id);
+  else updateCartUI();
+}
+
+function updateCartUI() {
+  const count = cart.reduce((s,c) => s + c.qty, 0);
+  document.getElementById('cartBadge').textContent = count;
+  document.getElementById('mobileCartBadge').textContent = count;
+  document.getElementById('mobileCartBadge').style.display = count > 0 ? 'flex' : 'none';
+
+  const body = document.getElementById('cartBody');
+  const empty = document.getElementById('cartEmpty');
+  const summary = document.getElementById('cartSummary');
+  const couponSec = document.getElementById('couponSection');
+
+  if (cart.length === 0) {
+    empty.style.display = 'block'; summary.style.display = 'none'; couponSec.style.display = 'none';
+    body.innerHTML = '<div class="cart-empty" id="cartEmpty"><div>🛒</div><p>Your cart is empty.<br>Add some books to get started!</p></div>';
+  } else {
+    summary.style.display = 'block'; couponSec.style.display = 'block';
+    body.innerHTML = cart.map(item => `
+      <div class="cart-item">
+        <div class="cart-item-icon">${item.icon}</div>
+        <div class="cart-item-info">
+          <div class="cart-item-name">${item.name}</div>
+          <div class="cart-item-sub">${item.class}</div>
+          <div class="cart-item-price">₹${item.price * item.qty}</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+            <div class="cart-item-controls">
+              <button class="cart-item-btn" onclick="changeCartQty(${item.id},-1)">−</button>
+              <span class="cart-item-qty">${item.qty}</span>
+              <button class="cart-item-btn" onclick="changeCartQty(${item.id},1)">+</button>
+            </div>
+            <button class="cart-item-remove" onclick="removeFromCart(${item.id})">🗑</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  const subtotal = cart.reduce((s,c) => s + c.price * c.qty, 0);
+  const discount = couponApplied ? Math.round(subtotal * 0.1) : 0;
+  const total = subtotal - discount;
+  document.getElementById('subtotalAmt').textContent = `₹${subtotal}`;
+  document.getElementById('discountAmt').textContent = `-₹${discount}`;
+  document.getElementById('totalAmt').textContent = `₹${total}`;
+  document.getElementById('couponSaving').textContent = discount;
+  document.getElementById('coSubtotal').textContent = `₹${subtotal}`;
+  document.getElementById('coTotal').textContent = `₹${total}`;
+}
+
+function openCart() {
+  document.getElementById('cartSidebar').classList.add('open');
+  document.getElementById('sidebarOverlay').classList.add('active');
+}
+function closeCart() {
+  document.getElementById('cartSidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('active');
+}
+
+function applyCoupon() {
+  const val = document.getElementById('couponInput').value.trim().toUpperCase();
+  if (val === 'BOOK10') {
+    couponApplied = true;
+    document.getElementById('couponSuccess').classList.add('show');
+    updateCartUI();
+    showToast('🎉 Coupon BOOK10 applied! 10% off', 'success');
+  } else {
+    showToast('❌ Invalid coupon code', 'error');
+  }
+}
+
+// ===== CHECKOUT =====
+let checkoutCurrentStep = 1;
+
+function startCheckout() {
+  if (cart.length === 0) { showToast('Cart is empty!', 'error'); return; }
+  if (!loggedIn) { closeCart(); openModal('authModal'); showToast('Please login to checkout'); return; }
+  closeCart();
+  checkoutCurrentStep = 1;
+  document.getElementById('checkoutAddress').style.display = 'block';
+  document.getElementById('checkoutPayment').style.display = 'none';
+  document.getElementById('checkoutOTP').style.display = 'none';
+  document.getElementById('checkoutSuccess').style.display = 'none';
+  resetCheckoutSteps();
+  openModal('checkoutModal');
+}
+
+function resetCheckoutSteps() {
+  ['cStep1','cStep2','cStep3','cStep4'].forEach((id,i) => {
+    const el = document.getElementById(id);
+    el.className = 'checkout-step ' + (i===0?'done':i===1?'active':'');
+  });
+}
+
+function checkoutStep(step) {
+  if (step === 2) {
+    document.getElementById('checkoutAddress').style.display = 'none';
+    document.getElementById('checkoutPayment').style.display = 'block';
+    document.getElementById('cStep2').className = 'checkout-step done';
+    document.getElementById('cStep3').className = 'checkout-step active';
+  } else if (step === 3) {
+    document.getElementById('checkoutPayment').style.display = 'none';
+    document.getElementById('checkoutOTP').style.display = 'block';
+    document.getElementById('cStep3').className = 'checkout-step done';
+    document.getElementById('cStep4').className = 'checkout-step active';
+    showToast('📱 OTP sent to your mobile!');
+  }
+}
+
+function confirmOrder() {
+  document.getElementById('checkoutOTP').style.display = 'none';
+  document.getElementById('checkoutSuccess').style.display = 'block';
+  document.getElementById('cStep4').className = 'checkout-step done';
+  cart = []; updateCartUI();
+  showToast('🎉 Order placed successfully!', 'success');
+  startTrackTimer();
+}
+
+// ===== AUTH =====
+function sendOTP(mode) {
+  const mob = document.getElementById(mode==='login'?'loginMobile':'signupMobile').value;
+  if (!mob || mob.length < 10) { showToast('Enter a valid mobile number', 'error'); return; }
+  document.getElementById('loginView').style.display = 'none';
+  document.getElementById('signupView').style.display = 'none';
+  document.getElementById('otpView').style.display = 'block';
+  showToast('📱 OTP sent to your number!');
+  startOTPTimer();
+}
+
+function verifyOTP() {
+  const digits = document.querySelectorAll('#authModal .otp-digit');
+  const otp = [...digits].map(d => d.value).join('');
+  if (otp.length === 6) {
+    loggedIn = true;
+    document.getElementById('otpView').style.display = 'none';
+    document.getElementById('profileView').style.display = 'block';
+    document.getElementById('loginBtn').textContent = '👤';
+    showToast('✅ Login successful! Welcome!', 'success');
+  } else {
+    showToast('Enter complete 6-digit OTP', 'error');
+  }
+}
+
+function showLogin() {
+  document.getElementById('loginView').style.display = 'block';
+  document.getElementById('signupView').style.display = 'none';
+  document.getElementById('otpView').style.display = 'none';
+  document.getElementById('profileView').style.display = 'none';
+}
+
+function showSignup() {
+  document.getElementById('signupView').style.display = 'block';
+  document.getElementById('loginView').style.display = 'none';
+}
+
+function logout() {
+  loggedIn = false;
+  closeModal('authModal');
+  showToast('Logged out successfully');
+}
+
+function startOTPTimer() {
+  let sec = 30;
+  const el = document.getElementById('otpTimer');
+  clearInterval(otpTimerInterval);
+  otpTimerInterval = setInterval(() => {
+    el.textContent = sec > 0 ? `⏱️ Resend in ${sec}s` : '🔄 Resend OTP';
+    if (sec <= 0) clearInterval(otpTimerInterval);
+    sec--;
+  }, 1000);
+}
+
+function otpNext(input, idx) {
+  const digits = input.closest('.otp-inputs').querySelectorAll('.otp-digit');
+  if (input.value && idx < 5) digits[idx+1].focus();
+}
+
+// ===== PINCODE =====
+const validPincodes = ['845438','845001','845002','845101','845301','845401','845440'];
+function checkPincode() {
+  const pin = document.getElementById('pincodeInput').value.trim();
+  const result = document.getElementById('pincodeResult');
+  if (pin.length !== 6) { showToast('Enter a valid 6-digit pincode', 'error'); return; }
+  if (validPincodes.includes(pin)) {
+    result.className = 'pincode-result available';
+    result.innerHTML = '✅ Great! We deliver to your area in <strong>30 minutes</strong>!';
+  } else {
+    result.className = 'pincode-result unavailable';
+    result.innerHTML = '❌ Sorry, we don\'t deliver to this pincode yet. Coming soon!';
+  }
+}
+
+// ===== TRACKING TIMER =====
+let trackInterval = null;
+function startTrackTimer() {
+  let sec = 24 * 60;
+  const el = document.getElementById('trackTimer');
+  clearInterval(trackInterval);
+  trackInterval = setInterval(() => {
+    sec = Math.max(0, sec - 1);
+    const m = Math.floor(sec/60).toString().padStart(2,'0');
+    const s = (sec%60).toString().padStart(2,'0');
+    el.textContent = `${m}:${s}`;
+    if (sec === 0) clearInterval(trackInterval);
+  }, 1000);
+}
+startTrackTimer();
+
+// ===== MODALS =====
+function openModal(id) {
+  document.getElementById(id).classList.add('active');
+  if (id === 'authModal' && loggedIn) {
+    document.getElementById('loginView').style.display = 'none';
+    document.getElementById('signupView').style.display = 'none';
+    document.getElementById('otpView').style.display = 'none';
+    document.getElementById('profileView').style.display = 'block';
+  }
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+}
+
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) overlay.classList.remove('active');
+  });
+});
+
+// ===== ADMIN TABS =====
+function adminTab(btn, panelId) {
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  ['adminOverview','adminOrders','adminProducts'].forEach(id => {
+    document.getElementById(id).style.display = id === panelId ? 'block' : 'none';
+  });
+}
+
+// ===== NOTIFICATIONS =====
+function toggleNotif() {
+  const panel = document.getElementById('notifPanel');
+  panel.classList.toggle('open');
+  if (panel.classList.contains('open')) {
+    document.getElementById('notifBadge').style.display = 'none';
+  }
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('#notifPanel') && !e.target.closest('.nav-icon-btn')) {
+    document.getElementById('notifPanel').classList.remove('open');
+  }
+});
+
+// ===== SUPPORT CHAT =====
+function toggleChat() {
+  document.getElementById('supportChat').classList.toggle('open');
+}
+
+function chatKeyPress(e) { if (e.key === 'Enter') sendChat(); }
+
+const chatReplies = [
+  "Sure! Let me check that for you. 😊",
+  "Your order will arrive in about 30 minutes. Please track it on the app!",
+  "We accept UPI, card, net banking, and cash on delivery.",
+  "We currently deliver in Bettiah city. Check your pincode above!",
+  "You can return any item within 24 hours of delivery."
+];
+let replyIdx = 0;
+
+function sendChat() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+  const body = document.getElementById('chatBody');
+  body.innerHTML += `<div class="support-chat-msg user"><div class="support-chat-bubble">${msg}</div></div>`;
+  input.value = '';
+  setTimeout(() => {
+    body.innerHTML += `<div class="support-chat-msg agent"><div class="support-chat-bubble">${chatReplies[replyIdx % chatReplies.length]}</div></div>`;
+    replyIdx++;
+    body.scrollTop = body.scrollHeight;
+  }, 800);
+  body.scrollTop = body.scrollHeight;
+}
+
+// ===== TOAST =====
+function showToast(msg, type='') {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `<span>${msg}</span>`;
+  container.appendChild(toast);
+  setTimeout(() => { toast.classList.add('removing'); setTimeout(() => toast.remove(), 300); }, 3000);
+}
+
+// ===== SCROLL HELPERS =====
+function scrollToTop() { window.scrollTo({ top:0, behavior:'smooth' }); }
+function scrollToProducts() { document.getElementById('products').scrollIntoView({ behavior:'smooth' }); }
+
+// ===== KEYBOARD ESC =====
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+    closeCart();
+  }
+});
+</script>
+
+</body>
+</html>
